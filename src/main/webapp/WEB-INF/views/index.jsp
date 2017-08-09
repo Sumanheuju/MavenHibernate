@@ -15,7 +15,7 @@
     <body>
         <h1>Super !!</h1>
         
-        <c:forEach var="cor" items="${courses}">
+        <c:forEach var="cor" items="${profileUsers}">
             <h2>${cor.name}</h2>
         </c:forEach>
     </body>

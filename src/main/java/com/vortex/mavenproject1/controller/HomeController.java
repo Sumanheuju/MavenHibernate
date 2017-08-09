@@ -5,7 +5,7 @@
  */
 package com.vortex.mavenproject1.controller;
 
-import com.vortex.mavenproject1.dao.CourseDAO;
+import com.vortex.mavenproject1.dao.ProfileUserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/")
 public class HomeController {
     @Autowired
-    private CourseDAO courseDAO;
+    private ProfileUserDAO profileUserDAO;
     
     @RequestMapping(method = RequestMethod.GET )
     public String index(Model model){
-        model.addAttribute("courses", courseDAO.getAll());
+        model.addAttribute("profileUsers", profileUserDAO.getAll());
         return "index";
     }
 }
