@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+">
+<bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/database.properties" />
+
+<bean id="dataSource"
+    class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+    p:driverClassName="${jdbc.driverClassName}"
+    p:url="${jdbc.url}"
+    p:username="${jdbc.username}"
+    p:password="${jdbc.password}" />
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <!-- Dialect is basically a specific sql syntax used for specific database, for now MySQL dialect is used my MySQL database -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+<!--                 
+                        - Basically validates or export the schema ddl to the database when the session factory is created
+                        - You can put four different values here i.e validate (validates the schema), update (updates the schema)
+                           ,create(creates the scheme, also destroys previous schema), create drop(It creates a schema, by the end of the session it will drop the created schema).
+                
+                <prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <prop key="hibernate.show_sql">false</prop>
+                <!-- Formats the outputted sql -->
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+        <property name="packagesToScan" value="com.vortex.mavenproject1.entity"></property>
+    </bean>
+</beans>
