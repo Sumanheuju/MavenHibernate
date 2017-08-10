@@ -14,4 +14,8 @@ import java.util.List;
  */
 public interface ProfileUserDAO {
     List<ProfileUser> getAll();
+    void insert(ProfileUser pu);
+    void update(ProfileUser pu);
+    void delete(int id);
+    ProfileUser getById(int id);
 }

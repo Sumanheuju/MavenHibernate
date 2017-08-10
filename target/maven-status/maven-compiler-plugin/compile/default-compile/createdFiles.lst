@@ -3,6 +3,7 @@ com/vortex/mavenproject1/entity/Profile.class
 com/vortex/mavenproject1/entity/ProfileUser.class
 com/vortex/mavenproject1/entity/ServiceCenter.class
 com/vortex/mavenproject1/entity/ServiceType.class
+com/vortex/mavenproject1/controller/CRUDRestController.class
 com/vortex/mavenproject1/controller/HomeController.class
 com/vortex/mavenproject1/dao/ProfileUserDAO.class
 com/vortex/mavenproject1/entity/ProfileMotor.class

@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -30,6 +31,26 @@ public class ProfileUserDAOImpl implements ProfileUserDAO{
         List<ProfileUser> profileUsers = session.createQuery("Select pu from ProfileUser pu").list();
         session.close();
         return profileUsers;
+    }
+
+    @Override
+    public void insert(ProfileUser pu) {
+        
+    }
+
+    @Override
+    public void update(ProfileUser pu) {
+        
+    }
+
+    @Override
+    public void delete(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ProfileUser getById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

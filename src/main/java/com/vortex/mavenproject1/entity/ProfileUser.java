@@ -5,12 +5,14 @@
  */
 package com.vortex.mavenproject1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,6 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "tbl_profile_users")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ProfileUser.findAll", query = "SELECT p FROM ProfileUser p")
@@ -90,7 +93,8 @@ public class ProfileUser implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "profile_picture")
     private String profilePicture;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profileUserId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profileUserId",fetch = FetchType.EAGER)
     private List<Profile> profileList;
 
     public ProfileUser() {
@@ -193,25 +197,7 @@ public class ProfileUser implements Serializable {
         this.profileList = profileList;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (profileUserId != null ? profileUserId.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProfileUser)) {
-            return false;
-        }
-        ProfileUser other = (ProfileUser) object;
-        if ((this.profileUserId == null && other.profileUserId != null) || (this.profileUserId != null && !this.profileUserId.equals(other.profileUserId))) {
-            return false;
-        }
-        return true;
-    }
+    
 
     @Override
     public String toString() {
