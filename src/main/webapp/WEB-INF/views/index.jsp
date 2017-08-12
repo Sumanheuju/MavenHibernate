@@ -17,6 +17,7 @@
         
         <c:forEach var="cor" items="${profileUsers}">
             <h2>${cor.name}</h2>
+            <h2>${cor.licenseNo}</h2>
         </c:forEach>
     </body>
 </html>

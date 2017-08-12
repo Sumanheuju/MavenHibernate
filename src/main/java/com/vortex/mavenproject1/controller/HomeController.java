@@ -6,14 +6,11 @@
 package com.vortex.mavenproject1.controller;
 
 import com.vortex.mavenproject1.dao.ProfileUserDAO;
-import com.vortex.mavenproject1.entity.ProfileUser;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
