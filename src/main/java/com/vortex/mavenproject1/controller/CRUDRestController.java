@@ -7,18 +7,23 @@ package com.vortex.mavenproject1.controller;
 
 import com.vortex.mavenproject1.dao.ProfileUserDAO;
 import com.vortex.mavenproject1.entity.ProfileUser;
+import java.io.File;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -32,6 +37,7 @@ public class CRUDRestController {
     @Autowired
     private ProfileUserDAO profileUserDAO;
     
+    @CrossOrigin
     @RequestMapping(value = "getAll", method = RequestMethod.GET)
     public ResponseEntity<List<ProfileUser>> listAllProfileUsers(){
         List<ProfileUser> profileUsers = profileUserDAO.getAll();
@@ -40,17 +46,43 @@ public class CRUDRestController {
         }
         return new ResponseEntity<>(profileUsers, HttpStatus.OK);
     }
-    
-    @RequestMapping(value = "profileUser/new", method = RequestMethod.POST)
-    public ResponseEntity<Void> addProfileUser(@RequestBody ProfileUser profileUser,UriComponentsBuilder ucb){
+    @CrossOrigin
+    @RequestMapping(value = "profileUser/new", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> addProfileUser(@RequestParam("name") String name,
+                            @RequestParam("address") String address,
+                            @RequestParam("contactNo") String contactNo,
+                            @RequestParam("licenseNo") String licenseNo,
+                            @RequestParam("bloodGroup") String bloodGroup,
+                            @RequestParam("vehicleNo") String vehicleNo,
+                            @RequestParam("email") String email,
+                            @RequestParam("profilePicture") MultipartFile multipartFile,
+                            UriComponentsBuilder ucb){
+//        HttpServletRequest req = (HttpServletRequest) request;
+//        HttpSession session = req.getSession();
+        String rootDirectory = "/Users/sumanheuju/NetBeansProjects/mavenproject1/MavenHibernate/src/main/webapp/";
         
+            ProfileUser profileUser = new ProfileUser();
+            profileUser.setName(name);
+            profileUser.setAddress(address);
+            profileUser.setContactNo(contactNo);
+            profileUser.setLicenseNo(licenseNo);
+            profileUser.setBloodGroup(bloodGroup);
+            profileUser.setVehicleNo(vehicleNo);
+            profileUser.setEmail(email);
+            
+            profileUser = saveOrUpdateImage(multipartFile, profileUser, rootDirectory);
+            
             profileUserDAO.insert(profileUser);
+            
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(ucb.path("profileUser/{id}").buildAndExpand(profileUser.getProfileUserId()).toUri());
             return new ResponseEntity<>(HttpStatus.CREATED);
         
     }
     
+    @CrossOrigin
     @RequestMapping(value = "profileUser/{profile_user_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileUser> getProfileUser(@PathVariable("profile_user_id") int id){
         
@@ -73,14 +105,14 @@ public class CRUDRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 //        
-        profileUser.setName("as");
-        profileUser.setAddress("asdasdasd");
-        profileUser.setContactNo("asdasdasd");
-        profileUser.setLicenseNo("asdasd");
-        profileUser.setBloodGroup("äsdasda");
-        profileUser.setVehicleNo("adsewfsf");
-        profileUser.setEmail("asdasd");
-        profileUser.setProfilePicture("äsdasdasd");
+        profileUser.setName(proUser.getName());
+        profileUser.setAddress(proUser.getAddress());
+        profileUser.setContactNo(proUser.getContactNo());
+        profileUser.setLicenseNo(proUser.getLicenseNo());
+        profileUser.setBloodGroup(proUser.getBloodGroup());
+        profileUser.setVehicleNo(proUser.getVehicleNo());
+        profileUser.setEmail(proUser.getEmail());
+        profileUser.setProfilePicture(proUser.getProfilePicture());
         
         profileUserDAO.update(profileUser);
         return new ResponseEntity<>(profileUser, HttpStatus.OK);
@@ -96,5 +128,29 @@ public class CRUDRestController {
         
         profileUserDAO.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    private ProfileUser saveOrUpdateImage(MultipartFile multipartFile, ProfileUser pu, String rootDirectory) {
+        try {
+            String finalPath = rootDirectory + "resources/superapp1/www/img/profilePics/";
+            System.out.println(">>>>>>>>>>?>>>>>>>>>" + finalPath);
+            // File Directory for the Images
+            File userImageDir = new File(finalPath);
+
+            if (!userImageDir.exists()) {
+                userImageDir.mkdir();
+            }
+            String newFileName = String.valueOf(pu.getName() + "_" +pu.getLicenseNo());
+            System.out.println(">>>>>>>!!!!!!>>>>>>>ProfileUserID>>>" + pu.getName() + "_" +pu.getLicenseNo());
+            File profilePic = new File(userImageDir, "/" + newFileName + ".jpg");
+
+            profilePic.createNewFile();
+            multipartFile.transferTo(profilePic);
+            pu.setProfilePicture(newFileName);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return pu;
     }
 }
